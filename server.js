@@ -67,7 +67,7 @@ app.get('/authResult', function (req, res) {
                 console.error(err);
                 throw err;
             } else {
-                res.send('가입완료');
+                res.send(JSON.parse(body));
             }
         })
 
@@ -88,4 +88,44 @@ app.get('/authResult', function (req, res) {
 
 })
 
+app.get('/mydata', function(req, res){
+    var user_num = '1100034707';
+    var qs = 'user_seq_no=' + user_num;             
+    var requestURL = "https://testapi.open-platform.or.kr/user/me?";
+
+    var option = {
+        url: requestURL + qs,
+        method: 'GET',
+        headers : {
+           'Authorization' : 'Bearer d16baa69-1dcf-42d2-8317-d28993c88377'
+        }
+    }
+
+    request(option, function(error, response, body){
+        console.log(JSON.parse(body));
+        res.json(body);
+    })
+})
+
+
+app.get('/list', function(req,res){
+    var user_num =  '1100034707';
+    var qs = 'user_seq_no=' + user_num +'&include_cancel_yn=Y&sort_order=D';
+    var requestURL = 'https://testapi.open-platform.or.kr/v1.0/account/list?'
+
+    var option = {
+        url: requestURL + qs,
+        method : 'GET',
+        headers : {
+            'Authorization' : 'Bearer d16baa69-1dcf-42d2-8317-d28993c88377'
+        }
+        
+    }
+
+    request(option, function(err, response, body){
+        console.log(JSON.parse(body));
+        res.render('accountList', {data :  JSON.parse(body).res_list});
+    })
+
+})
 app.listen(3000);
